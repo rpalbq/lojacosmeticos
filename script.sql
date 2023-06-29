@@ -4,170 +4,202 @@ CREATE DATABASE loja_cosmeticos;
 
 USE loja_cosmeticos; 
 
- 
-------------  CRIANDO TABELA endereco 
 
-CREATE TABLE endereco ( 
-id INT NOT NULL AUTO_INCREMENT,
-cep VARCHAR(15) NOT NULL,
-nome_rua VARCHAR(45) NOT NULL,
-numero INT NOT NULL,
-bairro VARCHAR(45) NOT NULL,
-cidade VARCHAR(45) NOT NULL,
-estado VARCHAR(45) NOT NULL,
-pais  VARCHAR(45) NOT NULL,
-PRIMARY KEY(id)
-); 
+-- CRIANDO TABELA CARGO
 
-------------  CRIANDO TABELA fornecedor
+DROP TABLE IF EXISTS `cargo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cargo` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `descricao` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE fornecedor (
-id INT NOT NULL AUTO_INCREMENT,
-nome VARCHAR(45) NOT NULL,
-cnpj VARCHAR(45) NOT NULL,
-email VARCHAR(100) NOT NULL,
-telefone VARCHAR(45) NOT NULL,
-endereco INT NOT NULL,
-PRIMARY KEY(id),
-FOREIGN KEY(endereco) REFERENCES endereco(id)
-);
-
------------- CRIANDO TABELA tipo_produto
-
-CREATE TABLE tipo_produto (
-id INT NOT NULL AUTO_INCREMENT,
-descricao VARCHAR(45) NOT NULL,
-PRIMARY KEY(id)
-);
+-- CRIANDO TABELA CLIENTE
 
 
------------- CRIANDO TABELA produto
-
-CREATE TABLE produto (
-id INT NOT NULL AUTO_INCREMENT,
-nome VARCHAR(100) NOT NULL,
-fornecedor INT NOT NULL,
-tipo_produto INT NOT NULL,
-valor DECIMAL(10,2) NOT NULL,
-data_fabricacao DATE NOT NULL,
-data_validade DATE NOT NULL,
-quantidade INT NOT NULL,
-PRIMARY KEY(id),
-FOREIGN KEY(fornecedor) REFERENCES fornecedor(id),
-FOREIGN KEY(tipo_produto) REFERENCES tipo_produto(id)
-);
-
-
------------- CRIANDO TABELA cargo
-
-CREATE TABLE cargo (
-id INT NOT NULL AUTO_INCREMENT,
-descricao VARCHAR(45) NOT NULL,
-PRIMARY KEY(id)
-);
-
-
------------- CRIANDO TABELA funcionario
-
-CREATE TABLE funcionario (
-id INT NOT NULL AUTO_INCREMENT,
-nome VARCHAR(150) NOT NULL,
-cpf VARCHAR(45) NOT NULL,
-email VARCHAR(100) NOT NULL,
-telefone VARCHAR(45) NOT NULL,
-cargo INT NOT NULL,
-endereco INT NOT NULL,
-codigo_funcionario INT NOT NULL,
-PRIMARY KEY (id),
-FOREIGN KEY (cargo) REFERENCES cargo(id),
-FOREIGN KEY (endereco) REFERENCES endereco (id),
-FOREIGN KEY (codigo_funcionario) REFERENCES codigo_funcionario (id)
-);
-
-
------------- CRIANDO TABELA codigo_funcionario
-
-CREATE TABLE codigo_funcionario (
-id INT NOT NULL AUTO_INCREMENT,
-id_funcionario INT NOT NULL,
-PRIMARY KEY(id)
-);
-
-
------------- criando tabela cliente
-
-CREATE TABLE cliente (
-id INT NOT NULL AUTO_INCREMENT,
-nome VARCHAR(45) NOT NULL,
-email VARCHAR(100) NOT NULL,
-cpf VARCHAR(45) NOT NULL,
-telefone VARCHAR(45) NOT NULL,
-PRIMARY KEY (id)
-);
-
-
------------- CRIANDO TABELA venda 
-
-CREATE TABLE venda (
-id INT NOT NULL AUTO_INCREMENT,
-id_codigofuncionario INT NOT NULL,
-id_cliente INT NOT NULL,
-valor DECIMAL(10,2) NOT NULL,
-horario VARCHAR(45) NOT NULL,
-data DATE NOT NULL,
-PRIMARY KEY (id),
-FOREIGN KEY (id_codigofuncionario) REFERENCES codigo_funcionario(id),
-FOREIGN KEY (id_cliente) REFERENCES cliente (id)
-);
-
-
------------- CRIANDO TABELA venda_produto
-
-CREATE TABLE venda_produto (
-id_venda INT NOT NULL,
-id_produto INT NOT NULL,
-quantidade INT NOT NULL,
-FOREIGN KEY (id_venda) REFERENCES venda (id),
-FOREIGN KEY (id_produto) REFERENCES produto (id)
-);
+DROP TABLE IF EXISTS `cliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cliente` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `cpf` varchar(45) NOT NULL,
+  `telefone` varchar(45) NOT NULL,
+  `endereco` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `endereco` (`endereco`),
+  CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`endereco`) REFERENCES `endereco` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 
 
---------------Adicionando FK na tabela codigo_funcionario, antes estava dando dependência circular
+
+-- CRIANDO TABELA CODIGO_FUNCIONARIO
 
 
-ALTER TABLE codigo_funcionario
-ADD CONSTRAINT FK_1
-FOREIGN KEY(id_funcionario) REFERENCES funcionario(id);
+DROP TABLE IF EXISTS `codigo_funcionario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `codigo_funcionario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_funcionario` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_1` (`id_funcionario`),
+  CONSTRAINT `FK_1` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionario` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6765 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---------------ALTERANDO TABELA CLIENTE
 
-ALTER TABLE cliente
-ADD COLUMN endereco INT NOT NULL,
-ADD FOREIGN KEY (endereco) REFERENCES endereco(id);
+-- CRIANDO TABELA ENDEREÇO
 
 
+DROP TABLE IF EXISTS `endereco`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `endereco` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cep` varchar(15) NOT NULL,
+  `nome_rua` varchar(45) NOT NULL,
+  `numero` int NOT NULL,
+  `bairro` varchar(45) NOT NULL,
+  `cidade` varchar(45) NOT NULL,
+  `estado` varchar(45) NOT NULL,
+  `pais` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--------------- POVOANDO TABELA tipo_produto
 
-INSERT INTO tipo_produto(descricao) VALUES ('Esmalte' ),
-('Maquiagem'),
-('Xampu para cabelo'),
-('Condicionador para cabelo'),
-('Creme para cabelo'),
-('Protetor solar'),
-('Hidratante'),
-('Perfume'),
-('Desodorante'),
-('Sabonete'),
-('Demaquilante'));
 
--------------- POVOANDO TABELA cargo
 
-INSERT INTO cargo(descricao) VALUES ('Gerente'),
-('Atendente'),
-('Auxiliar de limpeza'),
-('Caixa');
+-- CRIANDO TABELA FORNECEDOR
+
+
+DROP TABLE IF EXISTS `fornecedor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `fornecedor` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) NOT NULL,
+  `cnpj` varchar(45) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `telefone` varchar(45) NOT NULL,
+  `endereco` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `endereco` (`endereco`),
+  CONSTRAINT `fornecedor_ibfk_1` FOREIGN KEY (`endereco`) REFERENCES `endereco` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+-- CRIANDO TABELA FUNCIONÁRIO
+
+
+DROP TABLE IF EXISTS `funcionario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `funcionario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(150) NOT NULL,
+  `cpf` varchar(45) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `telefone` varchar(45) NOT NULL,
+  `cargo` int NOT NULL,
+  `endereco` int NOT NULL,
+  `codigo_funcionario` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cargo` (`cargo`),
+  KEY `endereco` (`endereco`),
+  KEY `codigo_funcionario` (`codigo_funcionario`),
+  CONSTRAINT `funcionario_ibfk_1` FOREIGN KEY (`cargo`) REFERENCES `cargo` (`id`),
+  CONSTRAINT `funcionario_ibfk_2` FOREIGN KEY (`endereco`) REFERENCES `endereco` (`id`),
+  CONSTRAINT `funcionario_ibfk_3` FOREIGN KEY (`codigo_funcionario`) REFERENCES `codigo_funcionario` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- CRIANDO TABELA PRODUTO
+
+
+DROP TABLE IF EXISTS `produto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `produto` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  `fornecedor` int NOT NULL,
+  `tipo_produto` int NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  `data_fabricacao` date NOT NULL,
+  `data_validade` date NOT NULL,
+  `quantidade` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fornecedor` (`fornecedor`),
+  KEY `tipo_produto` (`tipo_produto`),
+  CONSTRAINT `produto_ibfk_1` FOREIGN KEY (`fornecedor`) REFERENCES `fornecedor` (`id`),
+  CONSTRAINT `produto_ibfk_2` FOREIGN KEY (`tipo_produto`) REFERENCES `tipo_produto` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+-- CRIANDO TABELA TIPO_PRODUTO
+
+
+DROP TABLE IF EXISTS `tipo_produto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tipo_produto` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `descricao` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+-- CRIANDO TABELA VENDA
+
+
+DROP TABLE IF EXISTS `venda`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `venda` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_codigofuncionario` int NOT NULL,
+  `id_cliente` int NOT NULL,
+  `valor` decimal(10,2) DEFAULT NULL,
+  `horario` varchar(45) NOT NULL,
+  `data` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_codigofuncionario` (`id_codigofuncionario`),
+  KEY `id_cliente` (`id_cliente`),
+  CONSTRAINT `venda_ibfk_1` FOREIGN KEY (`id_codigofuncionario`) REFERENCES `codigo_funcionario` (`id`),
+  CONSTRAINT `venda_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=609 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+-- CRIANDO TABELA VENDA PRODUTO
+
+DROP TABLE IF EXISTS `venda_produto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `venda_produto` (
+  `id_venda` int NOT NULL,
+  `id_produto` int NOT NULL,
+  `quantidade` int NOT NULL,
+  KEY `id_venda` (`id_venda`),
+  KEY `id_produto` (`id_produto`),
+  CONSTRAINT `venda_produto_ibfk_1` FOREIGN KEY (`id_venda`) REFERENCES `venda` (`id`),
+  CONSTRAINT `venda_produto_ibfk_2` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 -------------- POVOANDO TABELA  endereco
 
