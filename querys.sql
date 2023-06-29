@@ -7,7 +7,7 @@ WHERE quantidade = 0;
 visualizar : SELECT * FROM produtos_sem_estoque;
 
 
------------------------------------ VIEW PARA VER VENDEDORA QUE VENDEU MAIS NO MÊS ATUAL
+----------------------------------- VIEW PARA VER VENDEDORA QU MAIS VENDEU NO MÊS ATUAL
 
 CREATE VIEW atendente_mais_vendas AS
 SELECT f.nome, COUNT(*) AS total_vendas
@@ -23,7 +23,8 @@ visualizar: SELECT * FROM vendedora_mais_vendas;
 
 
 -----------------------------------TRIGGERS 
--- ATUALIZAR ESTOQUE APÓS VENDA
+
+-- ATUALIZA A QUANTIDADE NO ESTOQUE APÓS VENDA
 
 
 DELIMITER $
@@ -37,7 +38,7 @@ WHERE produto.id = new.id_produto;
 END $
 
 
--- ATUALIZAR VENDA AUTOMATICAMENTE O VALOR
+-- ATUALIZA O CAMPO VALOR NA TABELA VENDA, FAZENDO A MULTIPLICAÇÃO DA QUANTIDADE E DO VALOR DOS PRODUTOS VENDIDOS NAQUELA VENDA. COM O RESULTADO, IRÁ COLOCAR AUTOMATICAMENTE O TOTAL NO CAMPO VALOR.
 
 DELIMITER $
 CREATE TRIGGER adicionar_valor
@@ -56,7 +57,8 @@ END $
 
 
 ----------------------------------- FUNÇÃO
--- VER A QUANTIDADE QUE  O CLIENTE JA GASTOU NA LOJA
+    
+-- VER A QUANTIDADE EM REAIS QUE O CLIENTE JA GASTOU NA LOJA
 
 DELIMITER $
 CREATE FUNCTION valortotal_compras(cliente_id INT) 
